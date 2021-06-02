@@ -122,10 +122,14 @@ namespace Bussen
                     {
                         loop = false;
                     }
+                    else
+                    {
+                        Console.WriteLine("Inkorrekt inmatning");
+                    }
                 }
-                catch
+                catch 
                 {
-                    Console.WriteLine("Inkorrekt inmatning");
+                    Console.WriteLine("Super inkorrekt inmatning");
                 }
             }
             while (loop);
@@ -134,7 +138,21 @@ namespace Bussen
 
         private static bool IsNameValid(string name)
         {
-            return true;
+            foreach (var charekter in name)
+            {
+                if (!Char.IsLetter(charekter))
+                {
+                    return false;
+                }
+            }
+            if (0 < name.Length)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public static int Age()

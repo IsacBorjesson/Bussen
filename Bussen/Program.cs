@@ -11,17 +11,23 @@ namespace Bussen
     } 
     class Passenger
     {
-        public int position;
-        public string name;
-        public int age;
-        public Sex sex;
+        public int position { get { return _position; } }
+        public string name { get { return _name; } }
+        public int age { get { return _age; } }
+        public Sex sex { get { return _sex; } }
+
+        private int _position { get; set; }
+        private string _name { get; set; }
+        private int _age { get; set; }
+        private Sex _sex { get; set; }
+
 
         public Passenger(int Position, string Name, int Age, Sex Sex)
         {
-            position = Position;
-            name = Name;
-            age = Age;
-            sex = Sex;
+            _position = Position;
+            _name = Name;
+            _age = Age;
+            _sex = Sex;
         }
 
         public void Poke_result()
@@ -70,9 +76,30 @@ namespace Bussen
             sex2 = (Sex)input2;
 
             passenger[0] = new Passenger(0, "Anders", 50, sex2); 
-            /*passenger[1] = new Passenger(1, "Malin", 5, sex);
+            passenger[1] = new Passenger(1, "Malin", 5, sex);
             passenger[2] = new Passenger(2, "Isac", 22, sex2);
-            passenger[24] = new Passenger(24, "Börje", 10, sex2);*/
+            passenger[3] = new Passenger(24, "Börje", 10, sex2);
+            passenger[4] = new Passenger(24, "Börje", 10, sex2);
+            passenger[5] = new Passenger(24, "Börje", 10, sex2);
+            passenger[6] = new Passenger(24, "Börje", 10, sex2);
+            passenger[7] = new Passenger(24, "Börje", 10, sex2);
+            passenger[8] = new Passenger(24, "Börje", 10, sex2);
+            passenger[9] = new Passenger(24, "Börje", 10, sex2);
+            passenger[10] = new Passenger(24, "Börje", 10, sex2);
+            passenger[11] = new Passenger(24, "Börje", 10, sex2);
+            passenger[12] = new Passenger(24, "Börje", 10, sex2);
+            passenger[13] = new Passenger(24, "Börje", 10, sex2);
+            passenger[14] = new Passenger(24, "Börje", 10, sex2);
+            passenger[15] = new Passenger(24, "Börje", 10, sex2);
+            passenger[16] = new Passenger(24, "Börje", 10, sex2);
+            passenger[17] = new Passenger(24, "Börje", 10, sex2);
+            passenger[18] = new Passenger(24, "Börje", 10, sex2);
+            passenger[19] = new Passenger(24, "Börje", 10, sex2);
+            passenger[20] = new Passenger(24, "Börje", 10, sex2);
+            passenger[21] = new Passenger(24, "Börje", 10, sex2);
+            passenger[22] = new Passenger(24, "Börje", 10, sex2);
+            passenger[23] = new Passenger(24, "Börje", 10, sex2);
+       
 
         }
 
@@ -139,12 +166,40 @@ namespace Bussen
             while (menu != 0);
         }
 
+        private static bool IsBussFull(Passenger[] passengers)
+        {
+            foreach (var p in passengers)
+            {
+                if (p == null)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static bool IsBussEmty(Passenger[] passengers)
+        {
+            foreach (var p in passengers)
+            {
+                if (p != null)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public void Add_passenger()
         {
             int position = 0;
             string Name;
             int Age = 0;
             Sex Sex;
+            if (IsBussFull(passenger))
+            {
+                Console.WriteLine("Bussen är full");
+            }
             position = UserInput.Position(passenger);
             Name = UserInput.Name();
             Age = UserInput.Age();
@@ -156,6 +211,10 @@ namespace Bussen
 
         public void Print_buss()
         {
+            if (IsBussEmty(passenger))
+            {
+                Console.WriteLine("Bussen är tom");
+            }
             Console.WriteLine("Dina passagerare sitter i denna ordningen");
             foreach (var position in passenger)
             {
@@ -269,7 +328,7 @@ namespace Bussen
 
             Console.WriteLine("Skriv in på vilken plats den du vill peta på sitter");
             int poke = 0;
-            poke = UserInput.Position(passenger, false);
+            poke = UserInput.Position(passenger, true);
             var person2 = passenger[poke];
             person2.Poke_result();
         }
