@@ -124,11 +124,11 @@ namespace Bussen
             // Ändringen i denna är att man kallar på IsNameValid()
             bool loop = true;
             string name = "";
-            Console.WriteLine("Skriv in namn");
             do
             {
                 try
                 {
+                    Console.WriteLine("Skriv in namn");
                     name = Console.ReadLine();
                     if (IsNameValid(name))
                     {

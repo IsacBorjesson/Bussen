@@ -87,8 +87,8 @@ namespace Bussen
                 Console.WriteLine("5 Skriv ut den äldsta personen på bussen");
                 Console.WriteLine("6 Hitta specifika ålderar på bussen");
                 Console.WriteLine("7 Sortera bussen i åldersordning");
-                Console.WriteLine("8 Peta på en passagerare");
-                Console.WriteLine("9 Skriv ut allas kön som sitter på bussen");
+                Console.WriteLine("8 Hur många män/kvinnor det finns på bussen");
+                Console.WriteLine("9 Peta på en passagerare");
                 Console.WriteLine("10 Ta bort en passagerare");
                 Console.WriteLine("0 Avsluta programmet");
                 // Här kommer första användningen av klassen UserInput som jag byggde i första hand för att hantera denna try and catch
@@ -118,10 +118,10 @@ namespace Bussen
                         Sort_bus();
                         break;
                     case 8:
-                        Poke();
+                        Print_sex(); 
                         break;
                     case 9:
-                        Print_sex();
+                        Poke();
                         break;
                     case 10:
                         Getting_off();
@@ -352,7 +352,7 @@ namespace Bussen
             }
             return intarray;
         }
-
+        
         public void Print_sex()
         {
             if (IsBussEmty(passenger))
@@ -361,18 +361,47 @@ namespace Bussen
             }
             else
             {
-                // Exakt samma metod som Print_buss
-                Console.WriteLine("Så här sitter folk med tanke på deras kö:");
+                // Det nya här är att omvandla Sex sex till int sex och då får man ut värderna 0 eller 1 istället för Man och Kvinna
+                // Så efter det kan man lättare skilja på dem så man kan räkna och sen skriva ut hur många kvinnor och män det finns i bussen
+                int man = 0;
+                int woman = 0;
                 foreach (var position in passenger)
                 {
                     if (position != null)
                     {
-                        // Omvandlar bara sex från en enum till string och sen metoden ToLower() för att få bokstäverna i lowercase
-                        Console.WriteLine("På plats {0} sitter en {1}", position.position, position.sex.ToString().ToLower());
+                        int sex = (int)position.sex;
+                        if (sex == 0)
+                        {
+                            man++;
+                        }
+                        else if (sex == 1)
+                        {
+                            woman++;
+                        }
                     }
                 }
+                PrintSexMessage(man, woman);
             }
+        }
 
+        private void PrintSexMessage(int man, int woman)
+        {
+            if (man == 1 && woman == 1)
+            {
+                Console.WriteLine("Det finns {0} man och {1} kvinna på bussen", man, woman);
+            }
+            else if (man == 1)
+            {
+                Console.WriteLine("Det finns {0} man och {1} kvinnor på bussen", man, woman);
+            }
+            else if (woman == 1)
+            {
+                Console.WriteLine("Det finns {0} män och {1} kvinna på bussen", man, woman);
+            }
+            else
+            {
+                Console.WriteLine("Det finns {0} män och {1} kvinnor på bussen", man, woman);
+            }
         }
 
         public void Poke()
