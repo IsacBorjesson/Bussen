@@ -4,13 +4,16 @@ using System.Collections.Generic;
 
 namespace Bussen
 {
+    // Skapar en vektor där endast två alternativ är godkända i 0 och 1 som reprensenterar könen
     enum Sex
     {
         Man = 0,
         Kvinna = 1,
-    } 
+    }
+    // Klassen som jag skapar för att dela upp och göra koden mer lättläslig och logisk
     class Passenger
     {
+        // Började uppgiften med att jobba med endast publika metoder och testar och visar här hur man ska hantera om man vill sätta variablera till privata
         public int position { get { return _position; } }
         public string name { get { return _name; } }
         public int age { get { return _age; } }
@@ -21,7 +24,6 @@ namespace Bussen
         private int _age { get; set; }
         private Sex _sex { get; set; }
 
-
         public Passenger(int Position, string Name, int Age, Sex Sex)
         {
             _position = Position;
@@ -29,7 +31,9 @@ namespace Bussen
             _age = Age;
             _sex = Sex;
         }
-
+        // En metod för Poke() som den blir kallad av, och är bara en samling av en massa else if satser
+        // Här jag även börjar märka av funtionalliteten av att dela in kodblock i olika klasser och metoder
+        // På detta sättet får man inte stora, långa och svårföljda metoder utan flera olika metoder i samma uppgift som man lättare kan följa
         public void Poke_result()
         {
             if (age > 60 && sex == Sex.Kvinna)
@@ -64,47 +68,12 @@ namespace Bussen
     }
     class Buss
     {
+        // En vanlig deklaration av objektet passenger som innehåller en array med 25 index platser
         public Passenger[] passenger = new Passenger[25];
-        
-        public Buss()
-        {
-            int input = 1;
-            Sex sex;
-            sex = (Sex)input;
-            int input2 = 0;
-            Sex sex2;
-            sex2 = (Sex)input2;
-
-            passenger[0] = new Passenger(0, "Anders", 50, sex2); 
-            passenger[1] = new Passenger(1, "Malin", 5, sex);
-            passenger[2] = new Passenger(2, "Isac", 22, sex2);
-            passenger[3] = new Passenger(24, "Börje", 10, sex2);
-            passenger[4] = new Passenger(24, "Börje", 10, sex2);
-            passenger[5] = new Passenger(24, "Börje", 10, sex2);
-            passenger[6] = new Passenger(24, "Börje", 10, sex2);
-            passenger[7] = new Passenger(24, "Börje", 10, sex2);
-            passenger[8] = new Passenger(24, "Börje", 10, sex2);
-            passenger[9] = new Passenger(24, "Börje", 10, sex2);
-            passenger[10] = new Passenger(24, "Börje", 10, sex2);
-            passenger[11] = new Passenger(24, "Börje", 10, sex2);
-            passenger[12] = new Passenger(24, "Börje", 10, sex2);
-            passenger[13] = new Passenger(24, "Börje", 10, sex2);
-            passenger[14] = new Passenger(24, "Börje", 10, sex2);
-            passenger[15] = new Passenger(24, "Börje", 10, sex2);
-            passenger[16] = new Passenger(24, "Börje", 10, sex2);
-            passenger[17] = new Passenger(24, "Börje", 10, sex2);
-            passenger[18] = new Passenger(24, "Börje", 10, sex2);
-            passenger[19] = new Passenger(24, "Börje", 10, sex2);
-            passenger[20] = new Passenger(24, "Börje", 10, sex2);
-            passenger[21] = new Passenger(24, "Börje", 10, sex2);
-            passenger[22] = new Passenger(24, "Börje", 10, sex2);
-            passenger[23] = new Passenger(24, "Börje", 10, sex2);
-       
-
-        }
-
+        // Här programet startar som deklarationen i main() utfärdar
         public void Run()
         {
+            // Väldigt simpel meny tagen från youtubevideorna rekomenderade för uppgiften
             int menu = 0;
             do
             {
@@ -122,6 +91,8 @@ namespace Bussen
                 Console.WriteLine("9 Skriv ut allas kön som sitter på bussen");
                 Console.WriteLine("10 Ta bort en passagerare");
                 Console.WriteLine("0 Avsluta programmet");
+                // Här kommer första användningen av klassen UserInput som jag byggde i första hand för att hantera denna try and catch
+                // Men det blev att jag blev intreserad av att utöka klassens funktion så nu tar klassen hand om all input från användaren
                 menu = UserInput.Menu();
                 switch (menu)
                 {
@@ -166,8 +137,65 @@ namespace Bussen
             while (menu != 0);
         }
 
+        public void Add_passenger()
+        {
+            int position = 0;
+            string Name;
+            int Age = 0;
+            Sex Sex;
+            // Kallar på metoden som kollar om bussen är full
+            if (IsBussFull(passenger))
+            {
+                Console.WriteLine("Bussen är full");
+            }
+            else
+            {
+                // Här kallar jag nu igen på metoder i klassen UserInput som jag nu även har skapat en ny fil till för den
+                // Så det blir lättare för mig att gå mellan klasserna och man inte behöver skrolla och leta lika mycket efter metoderna
+                position = UserInput.Position(passenger);
+                Name = UserInput.Name();
+                Age = UserInput.Age();
+                Sex = (Sex)UserInput.Sex();
+                // Slutligen efter man har skrivit in alla värden korrekt så läggs nu allt in i arrayen och man skickas tillbaka till menyn
+                passenger[position] = new Passenger(position, Name, Age, Sex);
+                Console.WriteLine("En passagere klev precis på bussen");
+            }
+
+        }
+
+        public void Print_buss()
+        {
+            // Kallar på metoden som kollar om bussen är tom
+            if (IsBussEmty(passenger))
+            {
+                Console.WriteLine("Bussen är tom");
+            }
+            else
+            {
+                // Här skriver vi då ut arrayen med en foreach loop
+                Console.WriteLine("Dina passagerare sitter i denna ordningen");
+                foreach (var position in passenger)
+                {
+                    // Så nu har vi första problemet med att ha en array istället för en lista och vi har ofta indexpositioner med värdet null
+                    // Null ger problem för man kan ju inte skriva ut något som inte finns, så här löser jag det med att filtera så med en if sats
+                    // Så nu kommer inte indexpositionerna med null kunna krasha programmet
+                    if (position != null)
+                    {
+                        Console.WriteLine("På plats {0} sitter den {1} årig {2} som heter {3}.",
+                            // Här kallas de specifika variablera från arrayen så de kan bli utskrivna
+                            position.position,
+                            position.age,
+                            position.sex.ToString().ToLower(),
+                            position.name);
+                    }
+                }
+            }
+        }
+        // Två simpla metoder som bara kollar om bussen är full eller tom och används i Add_ och Print_buss
         private static bool IsBussFull(Passenger[] passengers)
         {
+            // Den kollar alla index platser i arrayen och om någon av dessa platser är null (alltså tomma) kommer metoden retunera false
+            // Som innebär att if satsen inte körs
             foreach (var p in passengers)
             {
                 if (p == null)
@@ -177,7 +205,6 @@ namespace Bussen
             }
             return true;
         }
-
         private static bool IsBussEmty(Passenger[] passengers)
         {
             foreach (var p in passengers)
@@ -189,161 +216,212 @@ namespace Bussen
             }
             return true;
         }
-
-        public void Add_passenger()
+        
+        public int Calc_total_age()
         {
-            int position = 0;
-            string Name;
-            int Age = 0;
-            Sex Sex;
-            if (IsBussFull(passenger))
+            if (IsBussEmty(passenger))
             {
-                Console.WriteLine("Bussen är full");
+                Console.WriteLine("Bussen är tom");
+                int tempint = 0;
+                return tempint;
             }
-            position = UserInput.Position(passenger);
-            Name = UserInput.Name();
-            Age = UserInput.Age();
-            Sex = (Sex)UserInput.Sex();
-
-            passenger[position] = new Passenger(position, Name, Age, Sex);
-            Console.WriteLine("En passagere klev precis på bussen");
+            else
+            {
+                // Här kommer nästa lösning på null problemet i att använda metoder från System.Linq i Where() 
+                // Som bara använder och skickar vidare indexpositioner som inte har värde null genom en lambda expression
+                // Sen för att faktiskt lösa uppgiften metoden är namngiven efter så används värderna som inte är null i Sum()
+                // Där metoden Sum() räknar ihop summan av alla åldrar från variabeln age i arrayen passenger
+                // Vet att man kanske ska lösa uppgiften med att manuellt göra en liknade metod som Sum() med for eller foreach loopar 
+                // Men tröttna rätt snabbt på det och sökte efter andra sätt att lösa på de så jag faktiskt kan lära mig något nytt
+                int total_age = passenger.Where(x => x != null).Sum(x => x.age);
+                Console.WriteLine("Den totala åldern på bussen är {0} år", total_age);
+                return total_age;
+            }
+        }
+        
+        public double Calc_average_age()
+        {
+            if (IsBussEmty(passenger))
+            {
+                Console.WriteLine("Bussen är tom");
+                double tempdouble = 0;
+                return tempdouble;
+            }
+            else
+            {
+                // Exakt samma som förra med ändring på byte av metod till Average() och att metoden Calc_average_age nu returnerar double
+                double average_age = passenger.Where(x => x != null).Average(x => x.age);
+                Console.WriteLine("Medelåldern i bussen är {0} år", average_age);
+                return average_age;
+            }
+            
+        }
+        
+        public int Max_age()
+        {
+            if (IsBussEmty(passenger))
+            {
+                Console.WriteLine("Bussen är tom");
+                int tempint = 0;
+                return tempint;
+            }
+            else
+            {
+                // Samma fast med Max()
+                int max_age = passenger.Where(x => x != null).Max(x => x.age);
+                Console.WriteLine("Den äldsta personen på bussen är {0} år gammal", max_age);
+                return max_age;
+            }
         }
 
-        public void Print_buss()
+        public void Find_age()
         {
             if (IsBussEmty(passenger))
             {
                 Console.WriteLine("Bussen är tom");
             }
-            Console.WriteLine("Dina passagerare sitter i denna ordningen");
-            foreach (var position in passenger)
+            else
             {
-                if (position != null)
+                Console.WriteLine("Välj två åldrar att söka mellan");
+                int lowerBound = 0;
+                int upperBound = 0;
+                // Kallar på en metod från klass UserInput
+                lowerBound = UserInput.Age();
+                upperBound = UserInput.Age();
+                // Här använder vi samma ide som vid de förra metoderna och utökar den lite
+                // Börjar med att lösa null problemet sen väljer man ut indexpositioner som har åldern mellan just de två åldrarna användaren skriver in
+                //Sen om det fanns någon indexposition som klara sig igenom alla krav så används Select() metoden så man hämtar ut just variabeln name ur arrayen 
+                // För att lägga alla värderna ur name i string arrayen array_name och då behövs metoden ToArray() 
+                // Som behövs för att den ska kunna lägga värderna i en array och inte i en int som varit fallet i de förra egengjorda metoderna
+                string[] array_name = passenger.Where(x => x != null).Where(x => x.age >= lowerBound && x.age <= upperBound).Select(x => x.name).ToArray();
+                Console.WriteLine("Dessa personer finns mellan åldrarna du satte");
+                // Sen skriver man då just ut värderna ur arrayen vi skapade
+                foreach (string name in array_name)
                 {
-                    Console.WriteLine("På plats {0} sitter den {1} årig {2} som heter {3}.",
-                        position.position,
-                        position.age,
-                        position.sex.ToString().ToLower(),
-                        position.name);
+                    Console.WriteLine(name);
                 }
             }
         }
-
-        public int Calc_total_age()
-        {
-            int total_age = passenger.Where(x => x != null).Sum(x => x.age);
-            Console.WriteLine("Den totala åldern på bussen är {0} år", total_age);
-            return total_age;
-        }
-
-        public double Calc_average_age()
-        {
-            double average_age = passenger.Where(x => x != null).Average(x => x.age);
-            Console.WriteLine("Medelåldern i denna bussen är {0} år",average_age);
-            return average_age;
-        }
-
-        public int Max_age()
-        {
-            int max_age = passenger.Where(x => x != null).Max(x => x.age);
-            Console.WriteLine("Den äldsta personen på bussen är {0} år gammal", max_age);
-            return max_age;
-        }
-
-        public void Find_age()
-        {
-            Console.WriteLine("Välj två åldrar att söka mellan");
-            int lowerBound = 0;
-            int upperBound = 0;
-            lowerBound = UserInput.Age();
-            upperBound = UserInput.Age();
-
-            string[] array_name = passenger.Where(x => x != null).Where(x => x.age >= lowerBound && x.age <= upperBound).Select(x => x.name).ToArray();
-            Console.WriteLine("Dessa personer finns mellan åldrarna du satte");
-            foreach (string name in array_name)
-            {
-                Console.WriteLine(name);
-            }
-        }
-
+        
         public Passenger [] Sort_bus()
         {
-            Passenger[] intarray = passenger.Where(x => x != null).Select(x => x).ToArray();
-            intarray = Bubblesort(intarray);
-            Print_list(intarray);
-            return intarray;
+            if (IsBussEmty(passenger))
+            {
+                Console.WriteLine("Bussen är tom");
+                Passenger[] temparray = passenger.Where(x => x != null).Select(x => x).ToArray();
+                return temparray;
+            }
+            else
+            {
+                // Skapar ett nytt objekt där man inte tar med null och anpassar det till array
+                // Sen kallar man på de två metoderna som sorterar arrayen sen den andra som skriver ut det
+                Passenger[] intarray = passenger.Where(x => x != null).Select(x => x).ToArray();
+                intarray = Bubblesort(intarray);
+                Print_list(intarray);
+                return intarray;
+            }
         }
-        public Passenger[] Bubblesort(Passenger []passenger)
+        public Passenger[] Bubblesort(Passenger [] intarray)
         {
-            int a = passenger.Length;
+            // Här fanns det det redan en metod i .Sort() om man använder sig av en lista men med en array får man göra en egen
+            // Då stog det något om bubblesort så då använde jag den
+            int a = intarray.Length;
             for (int i = 0; i < a - 1; i++)
             {
                 for (int j = 0; j < a - i - 1; j++)
                 {
-                    if (passenger[j].age > passenger[j + 1].age)
+                    if (intarray[j].age > intarray[j + 1].age)
                     {
-                        Passenger temp = passenger[j];
-                        passenger[j] = passenger[j + 1];
-                        passenger[j + 1] = temp;
+                        Passenger temp = intarray[j];
+                        intarray[j] = intarray[j + 1];
+                        intarray[j + 1] = temp;
                     }
                 }
             
             }
-            return passenger;
+            return intarray;
         }
-        public Passenger[] Print_list(Passenger[] passenger)
+        public Passenger[] Print_list(Passenger[] intarray)
         {
             Console.WriteLine("Detta är bussen sorterad i åldersordning: \n");
-            int n = passenger.Length;
+            int n = intarray.Length;
             for (int i = 0; i < n; ++i)
             {
-                Console.WriteLine(passenger[i].name );
-                Console.WriteLine(passenger[i].age );
+                Console.WriteLine(intarray[i].name );
+                Console.WriteLine(intarray[i].age );
             }
-            return passenger;
+            return intarray;
         }
 
         public void Print_sex()
         {
-            Console.WriteLine("Så här sitter folk med tanke på deras kö:");
-            foreach (var position in passenger)
+            if (IsBussEmty(passenger))
             {
-                if (position != null)
+                Console.WriteLine("Bussen är tom");
+            }
+            else
+            {
+                // Exakt samma metod som Print_buss
+                Console.WriteLine("Så här sitter folk med tanke på deras kö:");
+                foreach (var position in passenger)
                 {
-                    Console.WriteLine("På plats {0} sitter en {1}", position.position, position.sex.ToString().ToLower());
+                    if (position != null)
+                    {
+                        // Omvandlar bara sex från en enum till string och sen metoden ToLower() för att få bokstäverna i lowercase
+                        Console.WriteLine("På plats {0} sitter en {1}", position.position, position.sex.ToString().ToLower());
+                    }
                 }
             }
+
         }
 
         public void Poke()
         {
-            Console.WriteLine("På dessa platser sitter folk");
-            foreach (var position in passenger)
+            if (IsBussEmty(passenger))
             {
-                if (position != null)
+                Console.WriteLine("Bussen är tom");
+            }
+            else
+            {
+                // Skriver ut vart passagerarna sitter så man slipper gissa 
+                Console.WriteLine("På dessa platser sitter folk");
+                foreach (var position in passenger)
                 {
-                    Console.WriteLine("Plats {0} sitter {1}", position.position, position.name);
+                    if (position != null)
+                    {
+                        Console.WriteLine("Plats {0} sitter {1}", position.position, position.name);
+                    }
                 }
+
+                Console.WriteLine("Skriv in på vilken plats den du vill peta på sitter");
+                int poke = 0;
+                // Kallar på metod i UserInput
+                poke = UserInput.Position(passenger, true);
+                var person2 = passenger[poke];
+                // Kallar på metod i Passenger
+                person2.Poke_result();
             }
 
-            Console.WriteLine("Skriv in på vilken plats den du vill peta på sitter");
-            int poke = 0;
-            poke = UserInput.Position(passenger, true);
-            var person2 = passenger[poke];
-            person2.Poke_result();
         }
 
         public void Getting_off()
         {
-            //var userInput = new UserInputServes();
-            var input = UserInput.Position(passenger, true);
-
-            for (int i = 0; i < passenger.Length; i++)
+            if (IsBussEmty(passenger))
             {
-                if (passenger[i]?.position == input)
+                Console.WriteLine("Bussen är tom");
+            }
+            else
+            {
+                // Kallar på metod i UserInput
+                var input = UserInput.Position(passenger, true);
+                for (int i = 0; i < passenger.Length; i++)
                 {
-                    Console.WriteLine("{0} steg precis av bussen", passenger[input].name);
-                    passenger[i] = null;
+                    // Man lokaliserar rätt indexposition som man vill "radera" och när den är hittad gäller if satsen och då görs den indexpositionen till null
+                    if (passenger[i]?.position == input)
+                    {
+                        Console.WriteLine("{0} steg precis av bussen", passenger[input].name);
+                        passenger[i] = null;
+                    }
                 }
             }
         }
@@ -352,6 +430,8 @@ namespace Bussen
     {
         public static void Main(string[] args)
         {
+            // Man skapar objektet minbuss som sedan kallar på metoden Run() som körs och "programmet" startar 
+            // Programmet slutas då när Run() är klart då användaren väljer 0 på menyn och man kommer tillbaka till Main() igen och programmet är klart
             var minbuss = new Buss();
             minbuss.Run();
             Console.Write("Press any key to continue . . . ");
